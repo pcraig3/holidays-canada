@@ -4,11 +4,13 @@ import ca.pcraig3.holidays.province.Province;
 import ca.pcraig3.holidays.province.ProvinceBadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -27,14 +29,14 @@ public class HolidayController {
     }
 
     @GetMapping
-    List<Holiday> all(@RequestParam(value = "national", required=false) Boolean national, @RequestParam(value = "province", required=false) String provinceId) {
+    Resources<Resource<Holiday>> all(@RequestParam(value = "national", required=false) Boolean national, @RequestParam(value = "province", required=false) String provinceId) {
+        List<Resource<Holiday>> holidays = null;
 
         if(national != null) {
             String message = national ? "national" : "non-national";
 
-            List<Holiday> h = this.repository.findByIsNational(national);
-            log.info(String.format("Get all %s '/holidays'. Found: %d.", message, h.size()));
-            return h;
+            holidays = list2Resource(this.repository.findByIsNational(national));
+            log.info(String.format("Get all %s '/holidays'. Found: %d.", message, holidays.size()));
         }
 
         // string should not be null or empty
@@ -45,15 +47,21 @@ public class HolidayController {
             if(!Province.isProvinceId(provinceId))
                 throw new ProvinceBadRequestException(provinceId);
 
-            List<Holiday> h = this.repository.findByProvinceId(provinceId);
-            log.info(String.format("Get '/holidays' for province '%s'. Found: %d.", provinceId, h.size()));
-            return h;
+            holidays = list2Resource(this.repository.findByProvinceId(provinceId));
+            log.info(String.format("Get '/holidays' for province '%s'. Found: %d.", provinceId, holidays.size()));
         }
 
+        if(holidays == null) {
+            holidays = list2Resource(this.repository.findAll());
+            log.info(String.format("Get all '/holidays'. Found: %d.", holidays.size()));
+        }
 
-        List<Holiday> h = this.repository.findAll();
-        log.info(String.format("Get all '/holidays'. Found: %d.", h.size()));
-        return h;
+        return new Resources<>(holidays,
+                linkTo(methodOn(HolidayController.class).all(national, provinceId)).withSelfRel().expand());
+    }
+
+    private List<Resource<Holiday>> list2Resource(List<Holiday> holidays) {
+        return holidays.stream().map(assembler::toResource).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")

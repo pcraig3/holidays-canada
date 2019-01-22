@@ -31,7 +31,7 @@ public class ProvinceController {
     @GetMapping
     Resources<Resource<Province>> all() {
         log.info("Get all '/provinces/'");
-        
+
         List<Resource<Province>> provinces = repository.findAll().stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());

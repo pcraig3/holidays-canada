@@ -19,8 +19,11 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class HolidayController {
 
     private final HolidayRepository repository;
-    HolidayController(HolidayRepository repository) {
+    private final HolidayResourceAssembler assembler;
+
+    HolidayController(HolidayRepository repository, HolidayResourceAssembler assembler) {
         this.repository = repository;
+        this.assembler = assembler;
     }
 
     @GetMapping
@@ -59,9 +62,7 @@ public class HolidayController {
         Holiday holiday = this.repository.findById(id).orElseThrow(
                 () -> new HolidayNotFoundException(id));
 
-        return new Resource<>(holiday,
-                linkTo(methodOn(HolidayController.class).one(id)).withSelfRel(),
-                linkTo(methodOn(HolidayController.class).all(null, null)).withRel("holidays").expand());
+        return this.assembler.toResource(holiday);
     }
 
 }

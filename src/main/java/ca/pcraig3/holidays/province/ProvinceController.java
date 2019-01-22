@@ -29,10 +29,10 @@ public class ProvinceController {
     }
 
     @GetMapping
-    Resources<Resource<Province>> all() {
+    Resources<ProvinceResource> all() {
         log.info("Get all '/provinces/'");
 
-        List<Resource<Province>> provinces = repository.findAll().stream()
+        List<ProvinceResource> provinces = repository.findAll().stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
 
@@ -41,7 +41,7 @@ public class ProvinceController {
     }
 
     @GetMapping("/{id}")
-    Resource<Province> one(@PathVariable String id) {
+    ProvinceResource one(@PathVariable String id) {
         log.info("Get '/provinces/" + id + "'");
         String provinceId = id.toUpperCase();
 

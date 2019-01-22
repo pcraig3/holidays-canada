@@ -8,7 +8,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @Component
-class HolidayResourceAssembler implements ResourceAssembler<Holiday, Resource<Holiday>> {
+public class HolidayResourceAssembler implements ResourceAssembler<Holiday, Resource<Holiday>> {
 
     @Override
     public Resource<Holiday> toResource(Holiday holiday) {

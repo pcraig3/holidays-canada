@@ -3,7 +3,6 @@ package ca.pcraig3.holidays.holiday;
 import ca.pcraig3.holidays.province.Province;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.joestelmach.natty.Parser;
-import lombok.ToString;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
@@ -13,7 +12,6 @@ import java.util.*;
 
 @Entity
 @Table(name="HOLIDAY")
-@ToString
 public class Holiday {
 
     @Id
@@ -93,6 +91,18 @@ public class Holiday {
     }
 
     public boolean getNational() { return isNational; }
+
+    @Override
+    public String toString() {
+        return "Holiday{" +
+                "id=" + id +
+                ", date='" + date + '\'' +
+                ", nameEn='" + nameEn + '\'' +
+                ", nameFr='" + nameFr + '\'' +
+                ", provinces=" + provinces.size() +
+                ", isNational=" + isNational +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -3,16 +3,19 @@ package ca.pcraig3.holidays.holiday;
 import ca.pcraig3.holidays.province.Province;
 import ca.pcraig3.holidays.province.ProvinceBadRequestException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+
 @RestController
 @Slf4j
+@RequestMapping(value = "/holidays", produces = {MediaType.APPLICATION_JSON_VALUE, "application/hal+json"})
 public class HolidayController {
 
     private final HolidayRepository repository;
@@ -20,7 +23,7 @@ public class HolidayController {
         this.repository = repository;
     }
 
-    @GetMapping("/holidays")
+    @GetMapping
     List<Holiday> all(@RequestParam(value = "national", required=false) Boolean national, @RequestParam(value = "province", required=false) String provinceId) {
 
         if(national != null) {
@@ -50,10 +53,15 @@ public class HolidayController {
         return h;
     }
 
-    @GetMapping("/holidays/{id}")
-    Holiday one(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    Resource<Holiday> one(@PathVariable Long id) {
         log.info("Get '/holidays/" + id + "'");
-        return this.repository.findById(id).orElseThrow(() -> new HolidayNotFoundException(id));
+        Holiday holiday = this.repository.findById(id).orElseThrow(
+                () -> new HolidayNotFoundException(id));
+
+        return new Resource<>(holiday,
+                linkTo(methodOn(HolidayController.class).one(id)).withSelfRel(),
+                linkTo(methodOn(HolidayController.class).all(null, null)).withRel("holidays").expand());
     }
 
 }

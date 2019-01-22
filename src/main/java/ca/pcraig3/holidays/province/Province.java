@@ -2,7 +2,6 @@ package ca.pcraig3.holidays.province;
 
 import ca.pcraig3.holidays.holiday.Holiday;
 import com.fasterxml.jackson.annotation.*;
-import lombok.ToString;
 import org.apache.commons.lang.time.DateUtils;
 
 import javax.persistence.*;
@@ -11,7 +10,6 @@ import java.util.*;
 
 @Entity
 @Table(name="PROVINCE")
-@ToString
 public class Province {
 
     @Id
@@ -49,7 +47,6 @@ public class Province {
         return Arrays.asList(PROVINCE_IDS).contains(id);
     }
 
-
     public String getId() {
         return id;
     }
@@ -82,6 +79,17 @@ public class Province {
         // TODO: what happens if there is no next date?
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "Province{" +
+                "id='" + id + '\'' +
+                ", nameEn='" + nameEn + '\'' +
+                ", nameFr='" + nameFr + '\'' +
+                ", holidays=" + holidays.size() +
+                '}';
+    }
+
 
     @Override
     public boolean equals(Object o) {

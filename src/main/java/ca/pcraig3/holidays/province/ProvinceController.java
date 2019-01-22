@@ -1,7 +1,6 @@
 package ca.pcraig3.holidays.province;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,18 +20,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class ProvinceController {
 
     private final ProvinceRepository repository;
-    private final ProvinceResourceAssembler assembler;
+    private final ProvinceHolidayResourceAssembler assembler;
 
-    ProvinceController(ProvinceRepository repository, ProvinceResourceAssembler assembler) {
+    ProvinceController(ProvinceRepository repository, ProvinceHolidayResourceAssembler assembler) {
         this.repository = repository;
         this.assembler = assembler;
     }
 
     @GetMapping
-    Resources<ProvinceResource> all() {
+    Resources<ProvinceHolidayResource> all() {
         log.info("Get all '/provinces/'");
 
-        List<ProvinceResource> provinces = repository.findAll().stream()
+        List<ProvinceHolidayResource> provinces = repository.findAll().stream()
                 .map(assembler::toResource)
                 .collect(Collectors.toList());
 
@@ -41,7 +40,7 @@ public class ProvinceController {
     }
 
     @GetMapping("/{id}")
-    ProvinceResource one(@PathVariable String id) {
+    ProvinceHolidayResource one(@PathVariable String id) {
         log.info("Get '/provinces/" + id + "'");
         String provinceId = id.toUpperCase();
 

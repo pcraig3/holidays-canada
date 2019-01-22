@@ -3,7 +3,6 @@ package ca.pcraig3.holidays.holiday;
 import ca.pcraig3.holidays.province.Province;
 import ca.pcraig3.holidays.province.ProvinceBadRequestException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
@@ -21,16 +20,18 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 public class HolidayController {
 
     private final HolidayRepository repository;
-    private final HolidayResourceAssembler assembler;
+    private final HolidayProvinceResourceAssembler assembler;
 
-    HolidayController(HolidayRepository repository, HolidayResourceAssembler assembler) {
+    HolidayController(HolidayRepository repository, HolidayProvinceResourceAssembler assembler) {
         this.repository = repository;
         this.assembler = assembler;
     }
 
     @GetMapping
-    Resources<Resource<Holiday>> all(@RequestParam(value = "national", required=false) Boolean national, @RequestParam(value = "province", required=false) String provinceId) {
-        List<Resource<Holiday>> holidays = null;
+    Resources<HolidayProvinceResource> all(
+            @RequestParam(value = "national", required=false) Boolean national,
+            @RequestParam(value = "province", required=false) String provinceId) {
+        List<HolidayProvinceResource> holidays = null;
 
         if(national != null) {
             String message = national ? "national" : "non-national";
@@ -60,12 +61,12 @@ public class HolidayController {
                 linkTo(methodOn(HolidayController.class).all(national, provinceId)).withSelfRel().expand());
     }
 
-    private List<Resource<Holiday>> list2Resource(List<Holiday> holidays) {
+    private List<HolidayProvinceResource> list2Resource(List<Holiday> holidays) {
         return holidays.stream().map(assembler::toResource).collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    Resource<Holiday> one(@PathVariable Long id) {
+    HolidayProvinceResource one(@PathVariable Long id) {
         log.info("Get '/holidays/" + id + "'");
         Holiday holiday = this.repository.findById(id).orElseThrow(
                 () -> new HolidayNotFoundException(id));

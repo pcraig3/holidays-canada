@@ -1,6 +1,6 @@
 # Canada Public Holidays API
 
-Canada has public holidays, but when are they? UK people when [UK bank holidays](https://www.gov.uk/bank-holidays) are — Canadians who can’t yet move to Liverpool still deserve to know when they can sleep in.
+Canada has public holidays, but when are they? UK people know when [UK bank holidays](https://www.gov.uk/bank-holidays) are — Canadians who can’t yet move to Liverpool still deserve to know when they can sleep in.
 
 This is an API that lists
 

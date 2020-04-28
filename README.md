@@ -1,4 +1,10 @@
-# Canada Public Holidays API
+### ⚠️ **Update** ⚠️
+
+### This API has been retired. Check out [canada-holidays.ca/api](https://canada-holidays.ca/api/) instead.
+
+---
+
+# Canada Public Holidays API (deprecated)
 
 Canada has public holidays, but when are they? UK people know when [UK bank holidays](https://www.gov.uk/bank-holidays) are — Canadians who can’t yet move to Liverpool still deserve to know when they can sleep in.
 
